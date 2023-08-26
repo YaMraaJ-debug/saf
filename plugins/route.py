@@ -19,9 +19,9 @@ from aiohttp.http_exceptions import BadStatusLine
 from lazybot import multi_clients, work_loads, LazyPrincessBot
 from server.exceptions import FIleNotFound, InvalidHash
 from Kismis import StartTime, __version__
-from until.custom_dl import ByteStreamer
-from until.time_format import get_readable_time
-from until.render_template import render_page
+from util.custom_dl import ByteStreamer
+from util.time_format import get_readable_time
+from util.render_template import render_page
 from info import *
 
 
