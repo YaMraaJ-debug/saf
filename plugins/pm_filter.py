@@ -31,6 +31,9 @@ from database.gfilters_mdb import (
     get_gfilters,
     del_allg
 )
+from util.human_readable import humanbytes
+from urllib.parse import quote_plus
+from util.file_properties import get_name, get_hash, get_media_file_size
 import logging
 
 logger = logging.getLogger(__name__)
@@ -912,7 +915,11 @@ async def cb_handler(client: Client, query: CallbackQuery):
                         protect_content=True if ident == "filep" else False,
                         reply_markup=InlineKeyboardMarkup(
                             [
-                             [
+                             [# Create the inline keyboard button with callback_data
+            button = InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
+            # Create the inline keyboard markup with the button
+            keyboard = InlineKeyboardMarkup([[button]])
+                            ],[
                               InlineKeyboardButton('🫨ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ', url=SUPPORT_CHAT),
                               InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=CHNL_LNK)
                             ],[
@@ -1005,7 +1012,11 @@ async def cb_handler(client: Client, query: CallbackQuery):
             protect_content=True if ident == 'checksubp' else False,
             reply_markup=InlineKeyboardMarkup(
                 [
-                 [
+                 [# Create the inline keyboard button with callback_data
+            button = InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
+            # Create the inline keyboard markup with the button
+            keyboard = InlineKeyboardMarkup([[button]])
+                ],[
                   InlineKeyboardButton('🫨ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ', url=SUPPORT_CHAT),
                   InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=CHNL_LNK)
                 ],[
