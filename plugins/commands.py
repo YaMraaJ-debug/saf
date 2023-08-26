@@ -141,6 +141,11 @@ async def start(client, message):
                     f_caption=f_caption
             if f_caption is None:
                 f_caption = f"{title}"
+
+
+     files_ = await get_file_details(file_id)           
+     if not files_:
+            pre, file_id = ((base64.urlsafe_b64decode(data + "=" * (-len(data) % 4))).decode("ascii")).split("_", 1)    
             try:
                 await client.send_cached_media(
                     chat_id=message.from_user.id,
@@ -187,7 +192,6 @@ async def start(client, message):
             await asyncio.sleep(1) 
         await sts.delete()
         return
-
         elif data.split("-", 1)[0] == "DSTORE":
         sts = await message.reply("<b>Please wait...</b>")
         b_string = data.split("-", 1)[1]
