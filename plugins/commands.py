@@ -150,9 +150,7 @@ async def start(client, message):
                     reply_markup=InlineKeyboardMarkup(
                         [
                          [# Create the inline keyboard button with callback_data
-            button = InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
-            # Create the inline keyboard markup with the button
-            keyboard = InlineKeyboardMarkup([[button]])   
+                          InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
                        ],[
                           InlineKeyboardButton('⛔️ ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ ⛔️', url=f'https://t.me/{SUPPORT_CHAT}'),
                           InlineKeyboardButton('🫨ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ', url=CHNL_LNK)
@@ -171,11 +169,8 @@ async def start(client, message):
                     caption=f_caption,
                     protect_content=msg.get('protect', False),
                     reply_markup=InlineKeyboardMarkup(
-                        [
-                         [# Create the inline keyboard button with callback_data
-            button = InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
-            # Create the inline keyboard markup with the button
-            keyboard = InlineKeyboardMarkup([[button]])   
+                        [# Create the inline keyboard button with callback_data
+                          InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
                        ],[
                           InlineKeyboardButton('🫨ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ', url=f'https://t.me/{SUPPORT_CHAT}'),
                           InlineKeyboardButton('ᴍᴏᴠɪᴇ ᴄʜᴀɴɴᴇʟ', url="https://t.me/bholaatw")
@@ -341,9 +336,7 @@ async def start(client, message):
                 reply_markup=InlineKeyboardMarkup(
                     [
                      [# Create the inline keyboard button with callback_data
-            button = InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
-            # Create the inline keyboard markup with the button
-            keyboard = InlineKeyboardMarkup([[button]])
+                          InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
                    ],[
                       InlineKeyboardButton('🫨ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ', url=f'https://t.me/{SUPPORT_CHAT}'),
                       InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=CHNL_LNK)
@@ -403,9 +396,7 @@ async def start(client, message):
                 reply_markup=InlineKeyboardMarkup(
                     [
                      [# Create the inline keyboard button with callback_data
-            button = InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
-            # Create the inline keyboard markup with the button
-            keyboard = InlineKeyboardMarkup([[button]])
+                      InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
                    ],[
                       InlineKeyboardButton('🫨ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ', url=f'https://t.me/{SUPPORT_CHAT}'),
                       InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=CHNL_LNK)
@@ -464,9 +455,7 @@ async def start(client, message):
         reply_markup=InlineKeyboardMarkup(
             [
              [# Create the inline keyboard button with callback_data
-            button = InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
-            # Create the inline keyboard markup with the button
-            keyboard = InlineKeyboardMarkup([[button]])
+                          InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
            ],[
               InlineKeyboardButton('🫨ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ', url=f'https://t.me/{SUPPORT_CHAT}'),
               InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=CHNL_LNK)
