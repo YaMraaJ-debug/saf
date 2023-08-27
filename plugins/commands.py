@@ -191,7 +191,7 @@ async def start(client, message):
             await asyncio.sleep(1) 
         await sts.delete()
         return
-   elif data.split("-", 1)[0] == "DSTORE":
+    elif data.split("-", 1)[0] == "DSTORE":
         sts = await message.reply("<b>Please wait...</b>")
         b_string = data.split("-", 1)[1]
         decoded = (base64.urlsafe_b64decode(b_string + "=" * (-len(b_string) % 4))).decode("ascii")
@@ -236,7 +236,7 @@ async def start(client, message):
             await asyncio.sleep(1) 
         return await sts.delete()
 
-       elif data.split("-", 1)[0] == "verify":
+    elif data.split("-", 1)[0] == "verify":
         userid = data.split("-", 2)[1]
         token = data.split("-", 3)[2]
         if str(message.from_user.id) != str(userid):
