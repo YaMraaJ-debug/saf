@@ -142,6 +142,10 @@ async def start(client, message):
             if f_caption is None:
                 f_caption = f"{title}"    
             try:
+                # Create the inline keyboard button with callback_data
+                button = InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
+                # Create the inline keyboard markup with the button
+                keyboard = InlineKeyboardMarkup([[button]])
                 await client.send_cached_media(
                     chat_id=message.from_user.id,
                     file_id=msg.get("file_id"),
@@ -149,12 +153,10 @@ async def start(client, message):
                     protect_content=msg.get('protect', False),
                     reply_markup=InlineKeyboardMarkup(
                         [
-                         [
-                          InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
-                       ],[
+                          [
                           InlineKeyboardButton('⛔️ ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ ⛔️', url=f'https://t.me/{SUPPORT_CHAT}'),
                           InlineKeyboardButton('🫨ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ', url=CHNL_LNK)
-                       ],[
+                         ],[
                           InlineKeyboardButton("😇ᴍᴏᴠɪᴇ ʀᴇQᴜᴇꜱᴛ ɢʀᴏᴜᴘ😇", url="https://t.me/+ujh9mDppIV02MmFl")
                          ]
                         ]
@@ -163,6 +165,10 @@ async def start(client, message):
             except FloodWait as e:
                 await asyncio.sleep(e.x)
                 logger.warning(f"Floodwait of {e.x} sec.")
+
+                button = InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
+                # Create the inline keyboard markup with the button
+                keyboard = InlineKeyboardMarkup([[button]])
                 await client.send_cached_media(
                     chat_id=message.from_user.id,
                     file_id=msg.get("file_id"),
@@ -171,8 +177,6 @@ async def start(client, message):
                     reply_markup=InlineKeyboardMarkup(
                        [
                         [
-                          InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
-                       ],[
                           InlineKeyboardButton('🫨ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ', url=f'https://t.me/{SUPPORT_CHAT}'),
                           InlineKeyboardButton('ᴍᴏᴠɪᴇ ᴄʜᴀɴɴᴇʟ', url="https://t.me/bholaatw")
                        ],[
@@ -328,6 +332,9 @@ async def start(client, message):
                     reply_markup=InlineKeyboardMarkup(btn)
                 )
                 return
+                button = InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
+                # Create the inline keyboard markup with the button
+                keyboard = InlineKeyboardMarkup([[button]])
             msg = await client.send_cached_media(
                 chat_id=message.from_user.id,
                 file_id=file_id,
@@ -336,8 +343,6 @@ async def start(client, message):
                 reply_markup=InlineKeyboardMarkup(
                     [
                      [
-                          InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
-                   ],[
                       InlineKeyboardButton('🫨ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ', url=f'https://t.me/{SUPPORT_CHAT}'),
                       InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=CHNL_LNK)
                    ],[
@@ -389,6 +394,9 @@ async def start(client, message):
                     reply_markup=InlineKeyboardMarkup(btn)
                 )
                 return
+                button = InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
+                # Create the inline keyboard markup with the button
+                keyboard = InlineKeyboardMarkup([[button]])
             msg = await client.send_cached_media(
                 chat_id=message.from_user.id,
                 file_id=file_id,
@@ -396,8 +404,6 @@ async def start(client, message):
                 reply_markup=InlineKeyboardMarkup(
                     [
                      [
-                      InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
-                   ],[
                       InlineKeyboardButton('🫨ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ', url=f'https://t.me/{SUPPORT_CHAT}'),
                       InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=CHNL_LNK)
                    ],[
@@ -447,6 +453,9 @@ async def start(client, message):
             reply_markup=InlineKeyboardMarkup(btn)
         )
         return
+        button = InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
+        # Create the inline keyboard markup with the button
+        keyboard = InlineKeyboardMarkup([[button]])
     msg = await client.send_cached_media(
         chat_id=message.from_user.id,
         file_id=file_id,
@@ -455,8 +464,6 @@ async def start(client, message):
         reply_markup=InlineKeyboardMarkup(
             [
              [
-               InlineKeyboardButton('▶ Gen Stream / Download Link', callback_data=f'generate_stream_link:{file_id}')
-           ],[
               InlineKeyboardButton('🫨ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ', url=f'https://t.me/{SUPPORT_CHAT}'),
               InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=CHNL_LNK)
            ],[
