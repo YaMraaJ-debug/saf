@@ -100,7 +100,7 @@ async def Lazy_start():
     temp.ME = me.id
     temp.U_NAME = me.username
     temp.B_NAME = me.first_name
-    LazyPrincessBot.username = '@' + me.username
+    LazyPrincessBot.username = f'@{me.username}'
     app = web.AppRunner(await web_server())
     await app.setup()
     bind_address = "0.0.0.0" if ON_HEROKU else BIND_ADRESS

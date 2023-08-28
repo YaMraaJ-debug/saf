@@ -33,14 +33,16 @@ async def root_route_handler(request):
         {
             "server_status": "running",
             "uptime": get_readable_time(time.time() - StartTime),
-            "telegram_bot": "@" + LazyPrincessBot.username,
+            "telegram_bot": f"@{LazyPrincessBot.username}",
             "connected_bots": len(multi_clients),
-            "loads": dict(
-                ("bot" + str(c + 1), l)
+            "loads": {
+                f"bot{str(c + 1)}": l
                 for c, (_, l) in enumerate(
-                    sorted(work_loads.items(), key=lambda x: x[1], reverse=True)
+                    sorted(
+                        work_loads.items(), key=lambda x: x[1], reverse=True
+                    )
                 )
-            ),
+            },
             "version": __version__,
         }
     )
@@ -49,8 +51,7 @@ async def root_route_handler(request):
 async def stream_handler(request: web.Request):
     try:
         path = request.match_info["path"]
-        match = re.search(r"^([a-zA-Z0-9_-]{6})(\d+)$", path)
-        if match:
+        if match := re.search(r"^([a-zA-Z0-9_-]{6})(\d+)$", path):
             secure_hash = match.group(1)
             id = int(match.group(2))
         else:
@@ -71,8 +72,7 @@ async def stream_handler(request: web.Request):
 async def stream_handler(request: web.Request):
     try:
         path = request.match_info["path"]
-        match = re.search(r"^([a-zA-Z0-9_-]{6})(\d+)$", path)
-        if match:
+        if match := re.search(r"^([a-zA-Z0-9_-]{6})(\d+)$", path):
             secure_hash = match.group(1)
             id = int(match.group(2))
         else:
@@ -93,10 +93,10 @@ class_cache = {}
 
 async def media_streamer(request: web.Request, id: int, secure_hash: str):
     range_header = request.headers.get("Range", 0)
-    
+
     index = min(work_loads, key=work_loads.get)
     faster_client = multi_clients[index]
-    
+
     if MULTI_CLIENT:
         logging.info(f"Client {index} is now serving {request.remote}")
 
@@ -110,11 +110,11 @@ async def media_streamer(request: web.Request, id: int, secure_hash: str):
     logging.debug("before calling get_file_properties")
     file_id = await tg_connect.get_file_properties(id)
     logging.debug("after calling get_file_properties")
-    
+
     if file_id.unique_id[:6] != secure_hash:
         logging.debug(f"Invalid hash for message with ID {id}")
         raise InvalidHash
-    
+
     file_size = file_id.file_size
 
     if range_header:
@@ -155,12 +155,11 @@ async def media_streamer(request: web.Request, id: int, secure_hash: str):
                 file_name = f"{secrets.token_hex(2)}.{mime_type.split('/')[1]}"
             except (IndexError, AttributeError):
                 file_name = f"{secrets.token_hex(2)}.unknown"
+    elif file_name:
+        mime_type = mimetypes.guess_type(file_id.file_name)
     else:
-        if file_name:
-            mime_type = mimetypes.guess_type(file_id.file_name)
-        else:
-            mime_type = "application/octet-stream"
-            file_name = f"{secrets.token_hex(2)}.unknown"
+        mime_type = "application/octet-stream"
+        file_name = f"{secrets.token_hex(2)}.unknown"
 
     return web.Response(
         status=206 if range_header else 200,

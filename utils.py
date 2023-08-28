@@ -113,7 +113,7 @@ async def get_poster(query, bulk=False, id=False, file=None):
     else:
         plot = movie.get('plot outline')
     if plot and len(plot) > 800:
-        plot = plot[0:800] + "..."
+        plot = f"{plot[:800]}..."
 
     return {
         'title': movie.get('title'),
@@ -234,8 +234,7 @@ def get_file_id(msg: Message):
             "voice",
             "sticker"
         ):
-            obj = getattr(msg, message_type)
-            if obj:
+            if obj := getattr(msg, message_type):
                 setattr(obj, "message_type", message_type)
                 return obj
 
@@ -456,7 +455,7 @@ def humanbytes(size):
     while size > power:
         size /= power
         n += 1
-    return str(round(size, 2)) + " " + Dic_powerN[n] + 'B'
+    return f"{str(round(size, 2))} {Dic_powerN[n]}B"
 
 async def get_shortlink(chat_id, link, second=False):
     settings = await get_settings(chat_id) #fetching settings for group
@@ -487,7 +486,7 @@ async def get_shortlink(chat_id, link, second=False):
         #   "price": 0,
         #   "currency": "INR",
         #   "purchase_note":""
-        
+
         # })
         # headers = {
         #   'Keep-Alive': '',
@@ -508,8 +507,7 @@ async def get_shortlink(chat_id, link, second=False):
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, params=params, raise_for_status=True, ssl=False) as response:
-                    data = await response.text()
-                    return data
+                    return await response.text()
         except Exception as e:
             logger.error(e)
             return link
@@ -625,17 +623,13 @@ async def get_shortlink(chat_id, link, second=False):
     
 async def get_tutorial(chat_id):
     settings = await get_settings(chat_id) #fetching settings for group
-    if 'tutorial' in settings.keys():
-        TUTORIAL_URL = settings['tutorial']
-    else:
-        TUTORIAL_URL = TUTORIAL
-    return TUTORIAL_URL
+    return settings['tutorial'] if 'tutorial' in settings.keys() else TUTORIAL
         
 async def get_verify_shorted_link(link):
     API = SHORTLINK_API
     URL = SHORTLINK_URL
     https = link.split(":")[0]
-    if "http" == https:
+    if https == "http":
         https = "https"
         link = link.replace("http", https)
 
@@ -651,9 +645,8 @@ async def get_verify_shorted_link(link):
                     data = await response.json(content_type="text/html")
                     if data["status"] == "success":
                         return data["shortlink"]
-                    else:
-                        logger.error(f"Error: {data['message']}")
-                        return f'https://{URL}/shortLink?token={API}&format=json&link={link}'
+                    logger.error(f"Error: {data['message']}")
+                    return f'https://{URL}/shortLink?token={API}&format=json&link={link}'
 
         except Exception as e:
             logger.error(e)
@@ -669,9 +662,8 @@ async def get_verify_shorted_link(link):
                     data = await response.json()
                     if data["status"] == "success":
                         return data['shortenedUrl']
-                    else:
-                        logger.error(f"Error: {data['message']}")
-                        return f'https://{URL}/api?api={API}&link={link}'
+                    logger.error(f"Error: {data['message']}")
+                    return f'https://{URL}/api?api={API}&link={link}'
 
         except Exception as e:
             logger.error(e)
@@ -682,16 +674,11 @@ async def check_token(bot, userid, token):
     if not await db.is_user_exist(user.id):
         await db.add_user(user.id, user.first_name)
         await bot.send_message(LOG_CHANNEL, script.LOG_TEXT_P.format(user.id, user.mention))
-    if user.id in TOKENS.keys():
-        TKN = TOKENS[user.id]
-        if token in TKN.keys():
-            is_used = TKN[token]
-            if is_used == True:
-                return False
-            else:
-                return True
-    else:
+    if user.id not in TOKENS.keys():
         return False
+    TKN = TOKENS[user.id]
+    if token in TKN.keys():
+        return TKN[token] != True
 
 async def get_token(bot, userid, link):
     user = await bot.get_users(userid)
@@ -725,10 +712,7 @@ async def check_verification(bot, userid):
         EXP = VERIFIED[user.id]
         years, month, day = EXP.split('-')
         comp = date(int(years), int(month), int(day))
-        if comp<today:
-            return False
-        else:
-            return True
+        return comp >= today
     else:
         return False
     
@@ -741,42 +725,47 @@ async def send_all(bot, userid, files, ident, chat_id, user_name, query):
         await save_group_settings(message.chat.id, 'is_shortlink', False)
         ENABLE_SHORTLINK = False
     try:
-        if ENABLE_SHORTLINK:
-            for file in files:
-                title = file.file_name
+        for file in files:
+            title = file.file_name
+            if ENABLE_SHORTLINK:
                 size = get_size(file.file_size)
                 await bot.send_message(chat_id=userid, text=f"<b>Hᴇʏ ᴛʜᴇʀᴇ {user_name} 👋🏽 \n\n✅ Sᴇᴄᴜʀᴇ ʟɪɴᴋ ᴛᴏ ʏᴏᴜʀ ғɪʟᴇ ʜᴀs sᴜᴄᴄᴇssғᴜʟʟʏ ʙᴇᴇɴ ɢᴇɴᴇʀᴀᴛᴇᴅ ᴘʟᴇᴀsᴇ ᴄʟɪᴄᴋ ᴅᴏᴡɴʟᴏᴀᴅ ʙᴜᴛᴛᴏɴ\n\n🗃️ Fɪʟᴇ Nᴀᴍᴇ : {title}\n🔖 Fɪʟᴇ Sɪᴢᴇ : {size}</b>", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("📤 Dᴏᴡɴʟᴏᴀᴅ 📥", url=await get_shortlink(chat_id, f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}"))]]))
-        else:
-            for file in files:
-                    f_caption = file.caption
-                    title = file.file_name
-                    size = get_size(file.file_size)
-                    if CUSTOM_FILE_CAPTION:
-                        try:
-                            f_caption = CUSTOM_FILE_CAPTION.format(file_name='' if title is None else title,
-                                                                    file_size='' if size is None else size,
-                                                                    file_caption='' if f_caption is None else f_caption)
-                        except Exception as e:
-                            print(e)
-                            f_caption = f_caption
-                    if f_caption is None:
-                        f_caption = f"{title}"
-                    await bot.send_cached_media(
-                        chat_id=userid,
-                        file_id=file.file_id,
-                        caption=f_caption,
-                        protect_content=True if ident == "filep" else False,
-                        reply_markup=InlineKeyboardMarkup(
+            else:
+                f_caption = file.caption
+                size = get_size(file.file_size)
+                if CUSTOM_FILE_CAPTION:
+                    try:
+                        f_caption = CUSTOM_FILE_CAPTION.format(file_name='' if title is None else title,
+                                                                file_size='' if size is None else size,
+                                                                file_caption='' if f_caption is None else f_caption)
+                    except Exception as e:
+                        print(e)
+                        f_caption = f_caption
+                if f_caption is None:
+                    f_caption = f"{title}"
+                await bot.send_cached_media(
+                    chat_id=userid,
+                    file_id=file.file_id,
+                    caption=f_caption,
+                    protect_content=ident == "filep",
+                    reply_markup=InlineKeyboardMarkup(
+                        [
                             [
-                                [
-                                InlineKeyboardButton('Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ', url=GRP_LNK),
-                                InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=CHNL_LNK)
-                            ],[
-                                InlineKeyboardButton("Bᴏᴛ Oᴡɴᴇʀ", url="t.me/Sivam_uv")
-                                ]
-                            ]
-                        )
-                    )
+                                InlineKeyboardButton(
+                                    'Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ', url=GRP_LNK
+                                ),
+                                InlineKeyboardButton(
+                                    'Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=CHNL_LNK
+                                ),
+                            ],
+                            [
+                                InlineKeyboardButton(
+                                    "Bᴏᴛ Oᴡɴᴇʀ", url="t.me/Sivam_uv"
+                                )
+                            ],
+                        ]
+                    ),
+                )
     except UserIsBlocked:
         await query.answer('Uɴʙʟᴏᴄᴋ ᴛʜᴇ ʙᴏᴛ ᴍᴀʜɴ !', show_alert=True)
     except PeerIdInvalid:
@@ -830,10 +819,7 @@ def get_readable_time(seconds: int) -> str:
     time_suffix_list = ["s", "m", "h", " days"]
     while count < 4:
         count += 1
-        if count < 3:
-            remainder, result = divmod(seconds, 60)
-        else:
-            remainder, result = divmod(seconds, 24)
+        remainder, result = divmod(seconds, 60) if count < 3 else divmod(seconds, 24)
         if seconds == 0 and remainder == 0:
             break
         time_list.append(int(result))
@@ -841,7 +827,7 @@ def get_readable_time(seconds: int) -> str:
     for x in range(len(time_list)):
         time_list[x] = str(time_list[x]) + time_suffix_list[x]
     if len(time_list) == 4:
-        readable_time += time_list.pop() + ", "
+        readable_time += f"{time_list.pop()}, "
     time_list.reverse()
     readable_time += ": ".join(time_list)
     return readable_time 
