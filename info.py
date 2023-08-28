@@ -59,9 +59,12 @@ if 'DYNO' in environ:
 else:
     ON_HEROKU = False
 BIND_ADRESS = str(environ.get('WEB_SERVER_BIND_ADDRESS', '0.0.0.0'))
-FQDN = str(environ.get('FQDN', BIND_ADRESS)) if not ON_HEROKU or environ.get('FQDN') else APP_NAME+'.herokuapp.com'
-URL = "https://{}/".format(FQDN) if ON_HEROKU or NO_PORT else \
-    "http://{}:{}/".format(FQDN, PORT)
+FQDN = (
+    str(environ.get('FQDN', BIND_ADRESS))
+    if not ON_HEROKU or environ.get('FQDN')
+    else f'{APP_NAME}.herokuapp.com'
+)
+URL = f"https://{FQDN}/" if ON_HEROKU or NO_PORT else f"http://{FQDN}:{PORT}/"
 SLEEP_THRESHOLD = int(environ.get('SLEEP_THRESHOLD', '60'))
 WORKERS = int(environ.get('WORKERS', '4'))
 SESSION_NAME = str(environ.get('SESSION_NAME', 'LazyBot'))
@@ -75,12 +78,14 @@ if 'DYNO' in environ:
 else:
     ON_HEROKU = False
 HAS_SSL=bool(environ.get('HAS_SSL',False))
-if HAS_SSL:
-    URL = "https://{}/".format(FQDN)
-else:
-    URL = "http://{}/".format(FQDN)
+URL = f"https://{FQDN}/" if HAS_SSL else f"http://{FQDN}/"
 UPDATES_CHANNEL = str(environ.get('UPDATES_CHANNEL', None))
-BANNED_CHANNELS = list(set(int(x) for x in str(environ.get("BANNED_CHANNELS", "-1001987654567")).split())) 
+BANNED_CHANNELS = list(
+    {
+        int(x)
+        for x in str(environ.get("BANNED_CHANNELS", "-1001987654567")).split()
+    }
+)
 OWNER_USERNAME = "Sivam_uv"
 
 
@@ -123,8 +128,11 @@ LANGUAGES = ["malayalam", "mal", "tamil", "tam" ,"english", "eng", "hindi", "hin
 
 SEASONS = ["season 1" , "season 2" , "season 3" , "season 4", "season 5" , "season 6" , "season 7" , "season 8" , "season 9" , "season 10"]
 
-LOG_STR = "Current Cusomized Configurations are:-\n"
-LOG_STR += ("IMDB Results are enabled, Bot will be showing imdb details for you queries.\n" if IMDB else "IMBD Results are disabled.\n")
+LOG_STR = "Current Cusomized Configurations are:-\n" + (
+    "IMDB Results are enabled, Bot will be showing imdb details for you queries.\n"
+    if IMDB
+    else "IMBD Results are disabled.\n"
+)
 LOG_STR += ("P_TTI_SHOW_OFF found , Users will be redirected to send /start to Bot PM instead of sending file file directly\n" if P_TTI_SHOW_OFF else "P_TTI_SHOW_OFF is disabled files will be send in PM, instead of sending start.\n")
 LOG_STR += ("SINGLE_BUTTON is Found, filename and files size will be shown in a single button instead of two separate buttons\n" if SINGLE_BUTTON else "SINGLE_BUTTON is disabled , filename and file_sixe will be shown as different buttons\n")
 LOG_STR += (f"CUSTOM_FILE_CAPTION enabled with value {CUSTOM_FILE_CAPTION}, your files will be send along with this customized caption.\n" if CUSTOM_FILE_CAPTION else "No CUSTOM_FILE_CAPTION Found, Default captions of file will be used.\n")

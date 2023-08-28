@@ -79,8 +79,16 @@ async def pm_text(bot, message):
     if content.startswith("/") or content.startswith("#"): return  # ignore commands and hashtags
     if user_id in ADMINS: return # ignore admins
     await message.reply_text(
-         text=f"<b>ʜᴇʏ {user} 😍 ,\n\nʏᴏᴜ ᴄᴀɴ'ᴛ ɢᴇᴛ ᴍᴏᴠɪᴇs ꜰʀᴏᴍ ʜᴇʀᴇ. ʀᴇǫᴜᴇsᴛ ɪᴛ ɪɴ ᴏᴜʀ <a href=https://t.me/newmoveisp>ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ</a> ᴏʀ ᴄʟɪᴄᴋ ʀᴇǫᴜᴇsᴛ ʜᴇʀᴇ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ 👇</b>",   
-         reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("📝 ʀᴇǫᴜᴇsᴛ ʜᴇʀᴇ ", url=f"https://t.me/+ujh9mDppIV02MmFl")]])
+        text=f"<b>ʜᴇʏ {user} 😍 ,\n\nʏᴏᴜ ᴄᴀɴ'ᴛ ɢᴇᴛ ᴍᴏᴠɪᴇs ꜰʀᴏᴍ ʜᴇʀᴇ. ʀᴇǫᴜᴇsᴛ ɪᴛ ɪɴ ᴏᴜʀ <a href=https://t.me/newmoveisp>ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ</a> ᴏʀ ᴄʟɪᴄᴋ ʀᴇǫᴜᴇsᴛ ʜᴇʀᴇ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ 👇</b>",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "📝 ʀᴇǫᴜᴇsᴛ ʜᴇʀᴇ ", url="https://t.me/+ujh9mDppIV02MmFl"
+                    )
+                ]
+            ]
+        ),
     )
     await bot.send_message(
         chat_id=LOG_CHANNEL,
@@ -97,10 +105,7 @@ async def next_page(bot, query):
         offset = int(offset)
     except:
         offset = 0
-    if BUTTONS.get(key)!=None:
-        search = BUTTONS.get(key)
-    else:
-        search = FRESH.get(key)
+    search = BUTTONS.get(key) if BUTTONS.get(key)!=None else FRESH.get(key)
     if not search:
         await query.answer(script.OLD_ALRT_TXT.format(query.from_user.first_name),show_alert=True)
         return
@@ -145,12 +150,17 @@ async def next_page(bot, query):
     #         for file in files
     #     ]
 
-        btn.insert(0, 
+        btn.insert(
+            0,
             [
-                InlineKeyboardButton(f'Sᴇʟᴇᴄᴛ ➢', 'select'),
-                InlineKeyboardButton("ʟᴀɴɢᴜᴀɢᴇs", callback_data=f"languages#{key}"),
-                InlineKeyboardButton("Sᴇᴀsᴏɴs",  callback_data=f"seasons#{key}")
-            ]
+                InlineKeyboardButton('Sᴇʟᴇᴄᴛ ➢', 'select'),
+                InlineKeyboardButton(
+                    "ʟᴀɴɢᴜᴀɢᴇs", callback_data=f"languages#{key}"
+                ),
+                InlineKeyboardButton(
+                    "Sᴇᴀsᴏɴs", callback_data=f"seasons#{key}"
+                ),
+            ],
         )
         btn.insert(0, [
             InlineKeyboardButton("Sᴛᴀʀᴛ Bᴏᴛ", url=f"https://telegram.me/{temp.U_NAME}"),
@@ -168,17 +178,47 @@ async def next_page(bot, query):
                 off_set = offset - 10
             if n_offset == 0:
                 btn.append(
-                    [InlineKeyboardButton("⌫ 𝐁𝐀𝐂𝐊", callback_data=f"next_{req}_{key}_{off_set}"), InlineKeyboardButton(f"{math.ceil(int(offset)/10)+1} / {math.ceil(total/10)}", callback_data="pages")]
+                    [
+                        InlineKeyboardButton(
+                            "⌫ 𝐁𝐀𝐂𝐊",
+                            callback_data=f"next_{req}_{key}_{off_set}",
+                        ),
+                        InlineKeyboardButton(
+                            f"{math.ceil(offset / 10) + 1} / {math.ceil(total / 10)}",
+                            callback_data="pages",
+                        ),
+                    ]
                 )
             elif off_set is None:
-                btn.append([InlineKeyboardButton("𝐏𝐀𝐆𝐄", callback_data="pages"), InlineKeyboardButton(f"{math.ceil(int(offset)/10)+1} / {math.ceil(total/10)}", callback_data="pages"), InlineKeyboardButton("𝐍𝐄𝐗𝐓 ➪", callback_data=f"next_{req}_{key}_{n_offset}")])
+                btn.append(
+                    [
+                        InlineKeyboardButton("𝐏𝐀𝐆𝐄", callback_data="pages"),
+                        InlineKeyboardButton(
+                            f"{math.ceil(offset / 10) + 1} / {math.ceil(total / 10)}",
+                            callback_data="pages",
+                        ),
+                        InlineKeyboardButton(
+                            "𝐍𝐄𝐗𝐓 ➪",
+                            callback_data=f"next_{req}_{key}_{n_offset}",
+                        ),
+                    ]
+                )
             else:
                 btn.append(
                     [
-                        InlineKeyboardButton("⌫ 𝐁𝐀𝐂𝐊", callback_data=f"next_{req}_{key}_{off_set}"),
-                        InlineKeyboardButton(f"{math.ceil(int(offset)/10)+1} / {math.ceil(total/10)}", callback_data="pages"),
-                        InlineKeyboardButton("𝐍𝐄𝐗𝐓 ➪", callback_data=f"next_{req}_{key}_{n_offset}")
-                    ],
+                        InlineKeyboardButton(
+                            "⌫ 𝐁𝐀𝐂𝐊",
+                            callback_data=f"next_{req}_{key}_{off_set}",
+                        ),
+                        InlineKeyboardButton(
+                            f"{math.ceil(offset / 10) + 1} / {math.ceil(total / 10)}",
+                            callback_data="pages",
+                        ),
+                        InlineKeyboardButton(
+                            "𝐍𝐄𝐗𝐓 ➪",
+                            callback_data=f"next_{req}_{key}_{n_offset}",
+                        ),
+                    ]
                 )
         else:
             if 0 < offset <= int(MAX_B_TN):
@@ -189,17 +229,47 @@ async def next_page(bot, query):
                 off_set = offset - int(MAX_B_TN)
             if n_offset == 0:
                 btn.append(
-                    [InlineKeyboardButton("⌫ 𝐁𝐀𝐂𝐊", callback_data=f"next_{req}_{key}_{off_set}"), InlineKeyboardButton(f"{math.ceil(int(offset)/int(MAX_B_TN))+1} / {math.ceil(total/int(MAX_B_TN))}", callback_data="pages")]
+                    [
+                        InlineKeyboardButton(
+                            "⌫ 𝐁𝐀𝐂𝐊",
+                            callback_data=f"next_{req}_{key}_{off_set}",
+                        ),
+                        InlineKeyboardButton(
+                            f"{math.ceil(offset / int(MAX_B_TN)) + 1} / {math.ceil(total / int(MAX_B_TN))}",
+                            callback_data="pages",
+                        ),
+                    ]
                 )
             elif off_set is None:
-                btn.append([InlineKeyboardButton("𝐏𝐀𝐆𝐄", callback_data="pages"), InlineKeyboardButton(f"{math.ceil(int(offset)/int(MAX_B_TN))+1} / {math.ceil(total/int(MAX_B_TN))}", callback_data="pages"), InlineKeyboardButton("𝐍𝐄𝐗𝐓 ➪", callback_data=f"next_{req}_{key}_{n_offset}")])
+                btn.append(
+                    [
+                        InlineKeyboardButton("𝐏𝐀𝐆𝐄", callback_data="pages"),
+                        InlineKeyboardButton(
+                            f"{math.ceil(offset / int(MAX_B_TN)) + 1} / {math.ceil(total / int(MAX_B_TN))}",
+                            callback_data="pages",
+                        ),
+                        InlineKeyboardButton(
+                            "𝐍𝐄𝐗𝐓 ➪",
+                            callback_data=f"next_{req}_{key}_{n_offset}",
+                        ),
+                    ]
+                )
             else:
                 btn.append(
                     [
-                        InlineKeyboardButton("⌫ 𝐁𝐀𝐂𝐊", callback_data=f"next_{req}_{key}_{off_set}"),
-                        InlineKeyboardButton(f"{math.ceil(int(offset)/int(MAX_B_TN))+1} / {math.ceil(total/int(MAX_B_TN))}", callback_data="pages"),
-                        InlineKeyboardButton("𝐍𝐄𝐗𝐓 ➪", callback_data=f"next_{req}_{key}_{n_offset}")
-                    ],
+                        InlineKeyboardButton(
+                            "⌫ 𝐁𝐀𝐂𝐊",
+                            callback_data=f"next_{req}_{key}_{off_set}",
+                        ),
+                        InlineKeyboardButton(
+                            f"{math.ceil(offset / int(MAX_B_TN)) + 1} / {math.ceil(total / int(MAX_B_TN))}",
+                            callback_data="pages",
+                        ),
+                        InlineKeyboardButton(
+                            "𝐍𝐄𝐗𝐓 ➪",
+                            callback_data=f"next_{req}_{key}_{n_offset}",
+                        ),
+                    ]
                 )
     except KeyError:
         await save_group_settings(query.message.chat.id, 'max_btn', True)
@@ -211,23 +281,44 @@ async def next_page(bot, query):
             off_set = offset - 10
         if n_offset == 0:
             btn.append(
-                [InlineKeyboardButton("⌫ 𝐁𝐀𝐂𝐊", callback_data=f"next_{req}_{key}_{off_set}"), InlineKeyboardButton(f"{math.ceil(int(offset)/10)+1} / {math.ceil(total/10)}", callback_data="pages")]
+                [
+                    InlineKeyboardButton(
+                        "⌫ 𝐁𝐀𝐂𝐊", callback_data=f"next_{req}_{key}_{off_set}"
+                    ),
+                    InlineKeyboardButton(
+                        f"{math.ceil(offset / 10) + 1} / {math.ceil(total / 10)}",
+                        callback_data="pages",
+                    ),
+                ]
             )
         elif off_set is None:
-            btn.append([InlineKeyboardButton("𝐏𝐀𝐆𝐄", callback_data="pages"), InlineKeyboardButton(f"{math.ceil(int(offset)/10)+1} / {math.ceil(total/10)}", callback_data="pages"), InlineKeyboardButton("𝐍𝐄𝐗𝐓 ➪", callback_data=f"next_{req}_{key}_{n_offset}")])
+            btn.append(
+                [
+                    InlineKeyboardButton("𝐏𝐀𝐆𝐄", callback_data="pages"),
+                    InlineKeyboardButton(
+                        f"{math.ceil(offset / 10) + 1} / {math.ceil(total / 10)}",
+                        callback_data="pages",
+                    ),
+                    InlineKeyboardButton(
+                        "𝐍𝐄𝐗𝐓 ➪", callback_data=f"next_{req}_{key}_{n_offset}"
+                    ),
+                ]
+            )
         else:
             btn.append(
                 [
-                    InlineKeyboardButton("⌫ 𝐁𝐀𝐂𝐊", callback_data=f"next_{req}_{key}_{off_set}"),
-                    InlineKeyboardButton(f"{math.ceil(int(offset)/10)+1} / {math.ceil(total/10)}", callback_data="pages"),
-                    InlineKeyboardButton("𝐍𝐄𝐗𝐓 ➪", callback_data=f"next_{req}_{key}_{n_offset}")
-                ],
+                    InlineKeyboardButton(
+                        "⌫ 𝐁𝐀𝐂𝐊", callback_data=f"next_{req}_{key}_{off_set}"
+                    ),
+                    InlineKeyboardButton(
+                        f"{math.ceil(offset / 10) + 1} / {math.ceil(total / 10)}",
+                        callback_data="pages",
+                    ),
+                    InlineKeyboardButton(
+                        "𝐍𝐄𝐗𝐓 ➪", callback_data=f"next_{req}_{key}_{n_offset}"
+                    ),
+                ]
             )
-    # if ENABLE_SHORTLINK == True:
-        # btn.insert(0, [
-        #     InlineKeyboardButton("Sᴛᴀʀᴛ Bᴏᴛ", url=f"https://telegram.me/{temp.U_NAME}"),
-        #     InlineKeyboardButton("𝐒𝐞𝐧𝐝 𝐀𝐥𝐥", callback_data=f"sendfiles#{key}")
-        # ])
     # else:
     #     btn.insert(0, [
     #         InlineKeyboardButton("Sᴛᴀʀᴛ Bᴏᴛ", url=f"https://telegram.me/{temp.U_NAME}"),
@@ -306,19 +397,19 @@ async def languages_cb_handler(client: Client, query: CallbackQuery):
     #     BUTTONS[key+"1"] = search
     search = FRESH.get(key)
     search = search.replace(' ', '_')
-    btn = []
-    for i in range(0, len(LANGUAGES)-1, 2):
-        btn.append([
+    btn = [
+        [
             InlineKeyboardButton(
                 text=LANGUAGES[i].title(),
-                callback_data=f"fl#{LANGUAGES[i].lower()}#{key}"
+                callback_data=f"fl#{LANGUAGES[i].lower()}#{key}",
             ),
             InlineKeyboardButton(
-                text=LANGUAGES[i+1].title(),
-                callback_data=f"fl#{LANGUAGES[i+1].lower()}#{key}"
+                text=LANGUAGES[i + 1].title(),
+                callback_data=f"fl#{LANGUAGES[i+1].lower()}#{key}",
             ),
-        ])
-
+        ]
+        for i in range(0, len(LANGUAGES) - 1, 2)
+    ]
     btn.insert(
         0,
         [
@@ -340,10 +431,7 @@ async def filter_languages_cb_handler(client: Client, query: CallbackQuery):
     search = FRESH.get(key)
     search = search.replace("_", " ")
     baal = lang in search
-    if baal:
-        search = search.replace(lang, "")
-    else:
-        search = search
+    search = search.replace(lang, "") if baal else search
     req = query.from_user.id
     chat_id = query.message.chat.id
     message = query.message
@@ -357,7 +445,7 @@ async def filter_languages_cb_handler(client: Client, query: CallbackQuery):
         pass
     searchagain = search
     if lang != "homepage":
-        search = f"{search} {lang}" 
+        search = f"{search} {lang}"
     BUTTONS[key] = search
 
     files, offset, total_results = await get_search_results(chat_id, search, offset=0, filter=True)
@@ -398,32 +486,32 @@ async def filter_languages_cb_handler(client: Client, query: CallbackQuery):
         ]
 
     try:
-        if settings['auto_delete']:
-            btn.insert(0, 
-                [
-                    InlineKeyboardButton(f'Sᴇʟᴇᴄᴛ ➢', 'select'),
-                    InlineKeyboardButton("ʟᴀɴɢᴜᴀɢᴇs", callback_data=f"languages#{key}"),
-                    InlineKeyboardButton("Sᴇᴀsᴏɴs",  callback_data=f"seasons#{key}")
-                ]
-            )
+        btn.insert(
+            0,
+            [
+                InlineKeyboardButton('Sᴇʟᴇᴄᴛ ➢', 'select'),
+                InlineKeyboardButton(
+                    "ʟᴀɴɢᴜᴀɢᴇs", callback_data=f"languages#{key}"
+                ),
+                InlineKeyboardButton(
+                    "Sᴇᴀsᴏɴs", callback_data=f"seasons#{key}"
+                ),
+            ],
+        )
 
-        else:
-            btn.insert(0, 
-                [
-                    InlineKeyboardButton(f'Sᴇʟᴇᴄᴛ ➢', 'select'),
-                    InlineKeyboardButton("ʟᴀɴɢᴜᴀɢᴇs", callback_data=f"languages#{key}"),
-                    InlineKeyboardButton("Sᴇᴀsᴏɴs", callback_data=f"seasons#{key}")
-                ]
-            )
-                
     except KeyError:
         await save_group_settings(query.message.chat.id, 'auto_delete', True)
-        btn.insert(0, 
+        btn.insert(
+            0,
             [
-                InlineKeyboardButton(f'Sᴇʟᴇᴄᴛ ➢', 'select'),
-                InlineKeyboardButton("ʟᴀɴɢᴜᴀɢᴇs", callback_data=f"languages#{key}"),
-                InlineKeyboardButton("Sᴇᴀsᴏɴs", callback_data=f"seasons#{key}")
-            ]
+                InlineKeyboardButton('Sᴇʟᴇᴄᴛ ➢', 'select'),
+                InlineKeyboardButton(
+                    "ʟᴀɴɢᴜᴀɢᴇs", callback_data=f"languages#{key}"
+                ),
+                InlineKeyboardButton(
+                    "Sᴇᴀsᴏɴs", callback_data=f"seasons#{key}"
+                ),
+            ],
         )
 
     # btn.insert(0, [
@@ -435,7 +523,7 @@ async def filter_languages_cb_handler(client: Client, query: CallbackQuery):
                 btn.append(
                     [InlineKeyboardButton("𝐏𝐀𝐆𝐄", callback_data="pages"), InlineKeyboardButton(text=f"1/{math.ceil(int(total_results)/10)}",callback_data="pages"), InlineKeyboardButton(text="𝐍𝐄𝐗𝐓 ➪",callback_data=f"next_{req}_{key}_{offset}")]
                 )
-    
+
             else:
                 btn.append(
                     [InlineKeyboardButton("𝐏𝐀𝐆𝐄", callback_data="pages"), InlineKeyboardButton(text=f"1/{math.ceil(int(total_results)/int(MAX_B_TN))}",callback_data="pages"), InlineKeyboardButton(text="𝐍𝐄𝐗𝐓 ➪",callback_data=f"next_{req}_{key}_{offset}")]
@@ -492,7 +580,7 @@ async def seasons_cb_handler(client: Client, query: CallbackQuery):
             )
     except:
         pass
-    
+
     _, key = query.data.split("#")
     # if BUTTONS.get(key+"2")!=None:
     #     search = BUTTONS.get(key+"2")
@@ -502,19 +590,19 @@ async def seasons_cb_handler(client: Client, query: CallbackQuery):
     search = FRESH.get(key)
     BUTTONS[key] = None
     search = search.replace(' ', '_')
-    btn = []
-    for i in range(0, len(SEASONS)-1, 2):
-        btn.append([
+    btn = [
+        [
             InlineKeyboardButton(
                 text=SEASONS[i].title(),
-                callback_data=f"fs#{SEASONS[i].lower()}#{key}"
+                callback_data=f"fs#{SEASONS[i].lower()}#{key}",
             ),
             InlineKeyboardButton(
-                text=SEASONS[i+1].title(),
-                callback_data=f"fs#{SEASONS[i+1].lower()}#{key}"
+                text=SEASONS[i + 1].title(),
+                callback_data=f"fs#{SEASONS[i+1].lower()}#{key}",
             ),
-        ])
-
+        ]
+        for i in range(0, len(SEASONS) - 1, 2)
+    ]
     btn.insert(
         0,
         [
@@ -535,17 +623,9 @@ async def filter_seasons_cb_handler(client: Client, query: CallbackQuery):
     _, seas, key = query.data.split("#")
     search = FRESH.get(key)
     search = search.replace("_", " ")
-    sea = ""
     season_search = ["s01","s02", "s03", "s04", "s05", "s06", "s07", "s08", "s09", "s10", "season 01","season 02","season 03","season 04","season 05","season 06","season 07","season 08","season 09","season 10", "season 1","season 2","season 3","season 4","season 5","season 6","season 7","season 8","season 9"]
-    for x in range (len(season_search)):
-        if season_search[x] in search:
-            sea = season_search[x]
-            break
-    if sea:
-        search = search.replace(sea, "")
-    else:
-        search = search
-    
+    sea = next((item for item in season_search if item in search), "")
+    search = search.replace(sea, "") if sea else search
     # await query.answer(f"search = {search}", show_alert=True)
     req = query.from_user.id
     chat_id = query.message.chat.id
@@ -558,34 +638,38 @@ async def filter_seasons_cb_handler(client: Client, query: CallbackQuery):
             )
     except:
         pass
-    
+
     searchagn = search
     search1 = search
     search2 = search
     search = f"{search} {seas}"
     BUTTONS0[key] = search
-    
+
     files, _, _ = await get_search_results(chat_id, search, max_results=10)
     files = [file for file in files if re.search(seas, file.file_name, re.IGNORECASE)]
-    
+
     seas1 = "s01" if seas == "season 1" else "s02" if seas == "season 2" else "s03" if seas == "season 3" else "s04" if seas == "season 4" else "s05" if seas == "season 5" else "s06" if seas == "season 6" else "s07" if seas == "season 7" else "s08" if seas == "season 8" else "s09" if seas == "season 9" else "s10" if seas == "season 10" else ""
     search1 = f"{search1} {seas1}"
     BUTTONS1[key] = search1
     files1, _, _ = await get_search_results(chat_id, search1, max_results=10)
-    files1 = [file for file in files1 if re.search(seas1, file.file_name, re.IGNORECASE)]
-    
-    if files1:
+    if files1 := [
+        file
+        for file in files1
+        if re.search(seas1, file.file_name, re.IGNORECASE)
+    ]:
         files.extend(files1)
-    
+
     seas2 = "season 01" if seas == "season 1" else "season 02" if seas == "season 2" else "season 03" if seas == "season 3" else "season 04" if seas == "season 4" else "season 05" if seas == "season 5" else "season 06" if seas == "season 6" else "season 07" if seas == "season 7" else "season 08" if seas == "season 8" else "season 09" if seas == "season 9" else "s010"
     search2 = f"{search2} {seas2}"
     BUTTONS2[key] = search2
     files2, _, _ = await get_search_results(chat_id, search2, max_results=10)
-    files2 = [file for file in files2 if re.search(seas2, file.file_name, re.IGNORECASE)]
-
-    if files2:
+    if files2 := [
+        file
+        for file in files2
+        if re.search(seas2, file.file_name, re.IGNORECASE)
+    ]:
         files.extend(files2)
-        
+
     if not files:
         await query.answer("🚫 𝗡𝗼 𝗙𝗶𝗹𝗲 𝗪𝗲𝗿𝗲 𝗙𝗼𝘂𝗻𝗱 🚫", show_alert=1)
         return
@@ -624,7 +708,7 @@ async def filter_seasons_cb_handler(client: Client, query: CallbackQuery):
         InlineKeyboardButton("𝐒𝐞𝐧𝐝 𝐀𝐥𝐥", callback_data=f"sendfiles#{key}"),
         InlineKeyboardButton("Sᴇʟᴇᴄᴛ ᴀɢᴀɪɴ", callback_data=f"seasons#{key}")
     ])
-    
+
 
     # btn.insert(0, [
     #     InlineKeyboardButton("Hᴏᴡ ᴛᴏ Dᴏᴡɴʟᴏᴀᴅ⚡", url=await get_tutorial(query.message.chat.id))
